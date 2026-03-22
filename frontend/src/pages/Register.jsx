@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Mail, Lock, User, Briefcase, Calendar, Eye, EyeOff } from "lucide-react";
@@ -26,7 +27,7 @@ export default function Register() {
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.email.includes("@")) {
@@ -45,11 +46,19 @@ export default function Register() {
     setLoading(true);
     setError("");
 
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2000);
-    }, 1500);
+    } catch (err) {
+      setError(err.response?.data?.error || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -312,7 +321,7 @@ export default function Register() {
               fontSize: "11px",
               color: "#4a5568",
             }}>
-              Data will be stored in the database once the backend is developed.
+             
             </p>
 
           </div>

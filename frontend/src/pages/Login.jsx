@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Mail, Lock, Eye, EyeOff } from "lucide-react";
@@ -12,7 +13,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim() || !password.trim()) {
@@ -21,10 +22,21 @@ export default function Login() {
     }
 
     setError("");
-    
-      navigate("/dashboard");
-  };
+    setLoading(true);
 
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.error || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div
       className="auth-page"
@@ -227,10 +239,6 @@ export default function Login() {
             <p style={{ marginTop: "24px", textAlign: "center", fontSize: "0.875rem", color: "#7a8494" }}>
               Don't have an account?{" "}
               <Link to="/register" className="auth-link">Create Account</Link>
-            </p>
-
-            <p style={{ marginTop: "12px", textAlign: "center", fontSize: "11px", color: "#4a5568" }}>
-              Credential verification will be active once backend is connected.
             </p>
           </div>
         </div>

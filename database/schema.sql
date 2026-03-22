@@ -1,0 +1,3 @@
+-- Firestore is used as the database (NoSQL)
+-- Collection: users
+-- Fields: uid (auto), name, email, password (bcrypt), created_at
