@@ -12,7 +12,7 @@ MediRisk is an AI-powered web application designed to assess cardiovascular dise
 ---
 
 ## Team Members
-Easha Javed
+Easha Javed,
 Dania Athar
 ---
 
