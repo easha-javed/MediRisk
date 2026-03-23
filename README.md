@@ -136,11 +136,3 @@ Full endpoint documentation is available in `docs/api-docs.md`.
 | AI chat assistant | Planned — Iteration 2 |
 
 ---
-
-## Course Information
-
-**Course:** Fundamentals of Software Engineering
-**Institution:** FAST-NUCES, Lahore
-**Semester:** Spring 2026
-
----
