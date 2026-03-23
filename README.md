@@ -9,16 +9,11 @@
 
 MediRisk is an AI-powered web application designed to assess cardiovascular disease risk based on patient-provided health parameters. The system combines a machine learning prediction model with an explainable AI interface, delivering not only a quantified risk score but also a human-readable breakdown of the contributing factors.
 
-Developed as a full-stack Software Engineering project at FAST-NUCES, Lahore — Spring 2026.
-
 ---
 
 ## Team Members
-
-| Name | Roll Number |
-|------|-------------|
-| Easha Javed | 23L-0593 |
-
+Easha Javed
+Dania Athar
 ---
 
 ## Tech Stack
@@ -71,7 +66,7 @@ MediRisk/
 - Python 3.10 or higher
 - Node.js 18 or higher
 - A Firebase project with Firestore enabled
-- Firebase service account key file (`firebase_config.json`)
+- Firebase service account key file 
 
 ---
 
