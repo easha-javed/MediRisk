@@ -1,57 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Activity, Heart, Shield, TrendingUp, ChevronRight, Brain, Zap } from "lucide-react";
 import "../styles/HomePage.css";
+import ClinicalNotice from "../components/ClinicalNotice";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [greeting, setGreeting] = useState("");
   const [time, setTime] = useState(new Date());
 
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good Morning");
-    else if (hour < 17) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
+  const greeting = useMemo(() => {
+    const hour = time.getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  }, [time]);
 
+  useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
-  const stats = [
-    {
-      icon: <Heart size={22} />,
-      label: "Heart Disease Risk",
-      value: "—",
-      sub: "No prediction yet",
-      color: "#ec4899",
-      glow: "rgba(236,72,153,0.15)",
-    },
-    {
-      icon: <TrendingUp size={22} />,
-      label: "Diabetes Risk",
-      value: "—",
-      sub: "No prediction yet",
-      color: "#6366f1",
-      glow: "rgba(99,102,241,0.15)",
-    },
-    {
-      icon: <Shield size={22} />,
-      label: "Overall Status",
-      value: "Pending",
-      sub: "Run analysis to update",
-      color: "#10b981",
-      glow: "rgba(16,185,129,0.15)",
-    },
-    {
-      icon: <Brain size={22} />,
-      label: "AI Insights",
-      value: "—",
-      sub: "Available after analysis",
-      color: "#8b5cf6",
-      glow: "rgba(139,92,246,0.15)",
-    },
-  ];
 
   const steps = [
     { number: "01", title: "Enter Patient Data", desc: "Fill in age, BP, cholesterol, glucose, BMI" },
@@ -247,6 +214,10 @@ export default function Dashboard() {
           </div>
         </div>
 
+        <div style={{ marginBottom: "24px" }}>
+          <ClinicalNotice />
+        </div>
+
         {/* Bottom CTA banner */}
         <div style={{
           background: "linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%)",
@@ -311,6 +282,28 @@ export default function Dashboard() {
             }}
           >
             Get Started
+            <ChevronRight size={16} />
+          </button>
+
+          <button
+            onClick={() => navigate("/history")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "12px",
+              padding: "10px 20px",
+              color: "#cbd5e1",
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 200ms",
+              flexShrink: 0,
+            }}
+          >
+            View History
             <ChevronRight size={16} />
           </button>
         </div>

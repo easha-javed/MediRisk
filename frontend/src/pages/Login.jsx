@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "../styles/HomePage.css";
+import { setAccessToken } from "../services/authService";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export default function Login() {
         password,
       });
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      setAccessToken(res.data.accessToken);
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed. Please try again.");

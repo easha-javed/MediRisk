@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Mail, Lock, User, Briefcase, Calendar, Eye, EyeOff } from "lucide-react";
 import "../styles/HomePage.css";
+import { setAccessToken } from "../services/authService";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -47,11 +48,14 @@ export default function Register() {
     setError("");
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
         name: form.name,
         email: form.email,
         password: form.password,
       });
+      if (res.data?.accessToken) {
+        setAccessToken(res.data.accessToken);
+      }
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {

@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PredictForm from "./pages/PredictForm";
 import ResultPage from "./pages/ResultPage";
+import HistoryPage from "./pages/HistoryPage";
 export default function App() {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/history" element={<HistoryPage />} />
         <Route path="/predict" element={<PredictForm />} />
         <Route path="/result" element={<ResultPage />} />
       </Routes>

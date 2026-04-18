@@ -1,78 +1,121 @@
-# MediRisk — AI-Powered Cardiovascular Risk Prediction System
+# MediRisk - AI-Powered Cardiovascular Risk Prediction System
 
-![React](https://img.shields.io/badge/React-18-blue?style=flat-square&logo=react)
+![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)
 ![Flask](https://img.shields.io/badge/Flask-Python-green?style=flat-square&logo=flask)
 ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange?style=flat-square&logo=firebase)
 ![License](https://img.shields.io/badge/License-Academic-lightgrey?style=flat-square)
 
 ## Description
 
-MediRisk is an AI-powered web application designed to assess cardiovascular disease risk based on patient-provided health parameters. The system combines a machine learning prediction model with an explainable AI interface, delivering not only a quantified risk score but also a human-readable breakdown of the contributing factors.
+MediRisk is an AI-assisted web application for estimating cardiovascular risk from user health inputs.
+The platform combines:
 
----
+- A trained machine learning model for probability + risk level classification
+- Clinical-style explanation blocks for result interpretation
+- A chat assistant connected to an OpenAI-compatible endpoint with offline fallback behavior
+- Firebase-backed history tracking per authenticated user
 
 ## Team Members
-Easha Javed,
-Dania Athar
----
+
+- Easha Javed
+- Dania Athar
+
+## Current Capabilities
+
+- User registration and login
+- JWT-based API authentication
+- Protected prediction, chat, and history routes
+- Heart disease risk prediction (Low / Moderate / High)
+- Probability score and risk factor extraction
+- AI explanation panel in the result page
+- Chat drawer with contextual assistant responses
+- Firebase-backed prediction history (list, create, clear)
+- Downloadable text report from result page
+- Clinical safety disclaimer components
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React 18, Vite, Tailwind CSS |
-| Backend | Python 3, Flask |
-| Database | Firebase Firestore (NoSQL) |
-| Authentication | bcrypt password hashing |
-| ML Model | Scikit-learn (Iteration 2) |
-| HTTP Client | Axios |
+| Frontend | React 19, Vite, React Router, custom CSS |
+| Backend | Python 3, Flask, Flask-CORS |
+| Database | Firebase Firestore |
+| Authentication | bcrypt password hashing + custom JWT |
+| ML Model | scikit-learn + imbalanced-learn + joblib |
+| LLM Integration | OpenAI-compatible Chat Completions API |
 
----
+## Project Structure
 
-## Folder Structure
-```
+```text
 MediRisk/
 ├── backend/
+│   ├── app.py
+│   ├── config.py
+│   ├── security.py
+│   ├── validation.py
 │   ├── routes/
 │   │   ├── auth.py
 │   │   ├── prediction.py
-│   │   └── chat.py
+│   │   ├── chat.py
+│   │   └── history.py
 │   ├── models/
-│   │   └── user.py
-│   ├── app.py
-│   ├── config.py
-│   ├── .env.example
+│   │   ├── predict.py
+│   │   ├── train.py
+│   │   ├── user.py
+│   │   ├── history.py
+│   │   ├── data/
+│   │   └── saved_model/
+│   ├── tests/
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── pages/
 │   │   ├── components/
+│   │   ├── pages/
 │   │   ├── services/
 │   │   └── styles/
 │   └── package.json
-├── database/
-│   ├── schema.sql
-│   └── seed.sql
 ├── docs/
-│   ├── report.docx
-│   └── api-docs.md
+│   ├── api-docs.md
+│   ├── model-card.md
+│   └── privacy-policy.md
+├── .github/workflows/ci.yml
 └── README.md
 ```
 
----
-
 ## Prerequisites
 
-- Python 3.10 or higher
-- Node.js 18 or higher
-- A Firebase project with Firestore enabled
-- Firebase service account key file 
+- Python 3.10+
+- Node.js 18+
+- Firebase project with Firestore enabled
+- Firebase service account key JSON file
 
----
+## Environment Setup
 
-## How to Run
+1. Copy `.env.example` to `.env` (project root) or `backend/.env`.
+2. Fill required variables:
+
+```env
+FIREBASE_CONFIG_PATH=firebase_config.json
+FLASK_ENV=development
+FLASK_PORT=5000
+OPENAI_API_KEY=
+OPENAI_MODEL=meta/llama-3.1-70b-instruct
+OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
+JWT_SECRET=replace-this-secret
+JWT_TTL_SECONDS=7200
+```
+
+3. Place Firebase service account key at `backend/firebase_config.json`.
+
+Note:
+
+- If `OPENAI_API_KEY` is empty, chat automatically uses offline assistant mode.
+- `.env` and Firebase key files are excluded from git.
+
+## Run Locally
 
 ### Backend
+
 ```bash
 cd backend
 python -m venv venv
@@ -87,52 +130,82 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The Flask server will start at `http://localhost:5000`.
-
-Place your Firebase service account key at `backend/firebase_config.json` before running.
-This file is excluded from version control. Refer to `.env.example` for configuration reference.
+Backend URL: `http://localhost:5000`
 
 ### Frontend
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-The Vite development server will start at `http://localhost:5173`.
+Frontend URL: `http://localhost:5173`
 
----
+## API Summary
 
-## API Endpoints
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | No | Register user and issue access token |
+| POST | `/api/auth/login` | No | Login and issue access token |
+| POST | `/api/prediction/predict` | Yes | Run risk prediction |
+| POST | `/api/chat/message` | Yes | Chat with contextual assistant |
+| GET | `/api/history` | Yes | List user prediction history |
+| POST | `/api/history` | Yes | Save prediction record |
+| DELETE | `/api/history` | Yes | Clear user history |
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Authenticate an existing user |
-| POST | `/api/prediction/predict` | Submit health data for risk prediction |
-| POST | `/api/chat/message` | Send a message to the AI assistant |
+Full API reference: `docs/api-docs.md`
 
-Full endpoint documentation is available in `docs/api-docs.md`.
+## Validation and Quality Checks
 
----
+### Frontend
 
-## Security
+```bash
+cd frontend
+npm run lint
+npm run build
+```
 
-- All passwords are hashed using bcrypt before being stored in Firestore.
-- Firebase credentials (`firebase_config.json`) are excluded from version control via `.gitignore`.
-- The `.env.example` file provides a safe template for environment configuration. Never commit `.env` or `firebase_config.json` to any repository.
+### Backend
 
----
+```bash
+cd backend
+python -m pytest -q
+```
+
+If `pytest` is missing in your current Python runtime, install it with:
+
+```bash
+pip install pytest
+```
+
+CI workflow file: `.github/workflows/ci.yml`
+
+## Security Notes
+
+- Passwords are hashed with bcrypt before storage.
+- JWT protects prediction/chat/history APIs.
+- Never commit `.env` or Firebase credential JSON.
+- Replace `JWT_SECRET` with a strong secret in production.
+
+## Governance and Documentation
+
+- API docs: `docs/api-docs.md`
+- Model card: `docs/model-card.md`
+- Privacy policy: `docs/privacy-policy.md`
 
 ## Project Status
 
 | Feature | Status |
 |---------|--------|
-| Frontend UI — 6 pages | Complete |
-| Flask REST API | Complete |
-| Firebase Firestore integration | Complete |
-| User registration and login | Complete |
-| ML cardiovascular risk model | Planned — Iteration 2 |
-| AI chat assistant | Planned — Iteration 2 |
+| Frontend app pages and routing | Implemented |
+| Flask REST API | Implemented |
+| Firebase Firestore integration | Implemented |
+| JWT auth and protected routes | Implemented |
+| ML cardiovascular risk model inference | Implemented |
+| AI chat assistant integration | Implemented |
+| Offline chat fallback mode | Implemented |
+| Prediction history (Firebase-backed) | Implemented |
+| Downloadable report | Implemented |
+| CI pipeline and backend tests | Implemented |
 
----

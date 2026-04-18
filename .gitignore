@@ -1,4 +1,19 @@
 backend/firebase_config.json
-__pycache__/
-*.pyc
+
+# Python cache/artifacts
+**/__pycache__/
+*.py[cod]
 model/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local environment files
+.env
+backend/.env
+
+# OS/editor artifacts
+.DS_Store
+Thumbs.db
